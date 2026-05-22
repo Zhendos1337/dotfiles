@@ -1,0 +1,38 @@
+{
+  "activeBackend": "mpvpaper",
+  "automationMode": "random",
+  "automationTime": 300,
+  "fillMode": "fit",
+  "mpvSocket": "/tmp/mpv-socket",
+  "profile": "default",
+  "volume": 1,
+  "wallpapersFolder": "/home/zhendos/Downloads",
+  "thumbCacheReady": true,
+  "DP-1": {
+    "volume": 1,
+    "currentWallpaper": "/home/zhendos/Downloads/mylivewallpapers-com-Picnic-Frog-4K.mp4",
+    "automation": false,
+    "automationMode": "random",
+    "automationTime": 300,
+    "hardwareAcceleration": false,
+    "profile": "default",
+    "fillMode": "fit",
+    "orientation": 0,
+    "isPlaying": true
+  },
+  "HDMI-A-2": {
+    "volume": 1,
+    "currentWallpaper": "/home/zhendos/Downloads/mylivewallpapers-com-Picnic-Frog-4K.mp4",
+    "automation": false,
+    "automationMode": "random",
+    "automationTime": 300,
+    "hardwareAcceleration": false,
+    "profile": "default",
+    "fillMode": "fit",
+    "orientation": 0,
+    "isPlaying": true
+  },
+  "enabled": true,
+  "monitorSpecific": true,
+  "automationCustomTime": []
+}
