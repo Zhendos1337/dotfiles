@@ -3,3 +3,4 @@
 -- Add any additional options here
 vim.opt.signcolumn = "yes:3"
 vim.g.autoformat = false
+vim.opt.clipboard = "unnamedplus"
