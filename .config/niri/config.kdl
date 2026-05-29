@@ -278,6 +278,23 @@ window-rule {
   open-floating true
 }
 
+// fix popups
+
+window-rule {
+    // Используем r#"..."# для сырых строк с регулярными выражениями
+    match app-id=r#"firefox$"#
+    exclude title=r#"^(Вход|Авторизация|Library|Пароли|Настройки|Save As|Open File)"# 
+    
+    // open-maximized-to-edges false
+}
+
+window-rule {
+    match app-id=r#"firefox$"#
+    
+    open-floating true
+    open-maximized-to-edges false
+}
+
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {
