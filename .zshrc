@@ -79,7 +79,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions)
+plugins=(git fzf-tab)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -112,6 +112,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # alias l='eza -lah --git'
+alias grm='git rm -r --cached' 
 alias l='eza -lah --git --icons --group-directories-first --header --octal-permissions'
 alias v='nvim'
 alias cat='bat'

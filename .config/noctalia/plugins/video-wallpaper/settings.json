@@ -18,7 +18,7 @@
     "profile": "default",
     "fillMode": "fit",
     "orientation": 0,
-    "isPlaying": true
+    "isPlaying": false
   },
   "HDMI-A-2": {
     "volume": 1,

@@ -132,8 +132,6 @@ spawn-at-startup "xwayland-satellite"
 spawn-sh-at-startup "waybar -c ~/.config/waybar/config_niri.json"
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
-// spawn-at-startup "mpvpaper" "-o" "loop" "*" "/home/zhendos/Downloads/mylivewallpapers-com-Picnic-Frog-4K.mp4"
-spawn-at-startup "mpvpaper" "*" "-o" "loop" "/home/zhendos/Downloads/mylivewallpapers-com-Picnic-Frog-4K.mp4"
 spawn-at-startup "qs" "-c" "noctalia-shell"
 spawn-at-startup "xwayland-satellite" ":12"
 
@@ -621,3 +619,9 @@ output "HDMI-A-2" {
     position x=0 y=0
 }
 
+cursor {
+    xcursor-theme "warcraft-3-cursors"
+    xcursor-size 18
+}
+
+spawn-at-startup "/bin/bash" "-c" "/home/zhendos/.config/niri/firefox-popups.sh"

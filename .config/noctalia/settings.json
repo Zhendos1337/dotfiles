@@ -42,15 +42,15 @@
     "bar": {
         "autoHideDelay": 500,
         "autoShowDelay": 150,
-        "backgroundOpacity": 0.93,
-        "barType": "floating",
+        "backgroundOpacity": 0,
+        "barType": "simple",
         "capsuleColorKey": "none",
         "capsuleOpacity": 1,
         "contentPadding": 3,
         "density": "default",
         "displayMode": "always_visible",
         "enableExclusionZoneInset": true,
-        "fontScale": 1.04,
+        "fontScale": 1,
         "frameRadius": 12,
         "frameThickness": 8,
         "hideOnOverview": false,
@@ -60,6 +60,8 @@
         "middleClickCommand": "",
         "middleClickFollowMouse": false,
         "monitors": [
+            "HDMI-A-2",
+            "DP-1"
         ],
         "mouseWheelAction": "none",
         "mouseWheelWrap": true,
@@ -70,11 +72,20 @@
         "rightClickCommand": "",
         "rightClickFollowMouse": true,
         "screenOverrides": [
+            {
+                "enabled": false,
+                "name": "HDMI-A-2"
+            },
+            {
+                "displayMode": "auto_hide",
+                "enabled": true,
+                "name": "DP-1"
+            }
         ],
         "showCapsule": true,
         "showOnWorkspaceSwitch": true,
-        "showOutline": false,
-        "useSeparateOpacity": false,
+        "showOutline": true,
+        "useSeparateOpacity": true,
         "widgetSpacing": 8,
         "widgets": {
             "center": [
@@ -138,7 +149,7 @@
                     "maxWidth": 145,
                     "scrollingMode": "hover",
                     "showIcon": true,
-                    "showText": true,
+                    "showText": false,
                     "textColor": "none",
                     "useFixedWidth": false
                 },
@@ -211,7 +222,11 @@
                     "hidePassive": false,
                     "id": "Tray",
                     "pinned": [
-                        "DBST790548935943414"
+                        "DBST790548935943414",
+                        "DBST873797390873424",
+                        "DBST6321155158023",
+                        "DBST76495685898455",
+                        "DBST123748499748484"
                     ]
                 },
                 {
@@ -303,10 +318,113 @@
                     "id": "plugin:tamagotchi"
                 },
                 {
+                    "defaultSettings": {
+                        "activeBackend": "qt6-multimedia",
+                        "automationMode": "random",
+                        "automationTime": 300,
+                        "fillMode": "fit",
+                        "mpvSocket": "/tmp/mpv-socket",
+                        "profile": "default",
+                        "volume": 1,
+                        "wallpapersFolder": "~/Pictures/Wallpapers"
+                    },
                     "id": "plugin:video-wallpaper"
                 },
                 {
+                    "defaultSettings": {
+                        "applyWallpaperColorsOnApply": false,
+                        "autoApplyOnStartup": true,
+                        "badgeEnabled": {
+                            "approved": true,
+                            "compatibility": true,
+                            "dynamic": true,
+                            "music": true,
+                            "reactive": true,
+                            "resolution": true,
+                            "type": true
+                        },
+                        "badgeOrder": [
+                            "type",
+                            "dynamic",
+                            "music",
+                            "reactive",
+                            "approved",
+                            "resolution",
+                            "compatibility"
+                        ],
+                        "defaultAudioReactiveEffects": true,
+                        "defaultClamp": "clamp",
+                        "defaultDisableMouse": false,
+                        "defaultDisableParallax": false,
+                        "defaultFps": 30,
+                        "defaultFullscreenPauseOnlyActive": false,
+                        "defaultMuted": true,
+                        "defaultNoAutomute": false,
+                        "defaultNoFullscreenPause": false,
+                        "defaultScaling": "fill",
+                        "defaultVolume": 100,
+                        "enableExtraPropertiesEditor": true,
+                        "iconColor": "none",
+                        "lastKnownGoodScreens": {
+                        },
+                        "panelLastSelectedPath": "",
+                        "panelPageSize": 24,
+                        "runtimeRecoveryPending": false,
+                        "screens": {
+                        },
+                        "showSidebarDescription": false,
+                        "wallpaperColorScreenshots": {
+                        },
+                        "wallpaperProperties": {
+                        },
+                        "wallpaperScanCacheMinutes": 10,
+                        "wallpapersFolder": "~/.local/share/Steam/steamapps/workshop/content/431960"
+                    },
                     "id": "plugin:linux-wallpaperengine-controller"
+                },
+                {
+                    "defaultSettings": {
+                        "autoHeight": true,
+                        "bindOverrides": {
+                        },
+                        "cheatsheetData": [
+                        ],
+                        "columnCount": 3,
+                        "descriptionTextColor": "#E0E0E0",
+                        "detectedCompositor": "",
+                        "hyprlandConfigPath": "~/.config/hypr/hyprland.conf",
+                        "hyprlandLuaConfigPath": "~/.config/hypr/hyprland.lua",
+                        "hyprlandParserMode": "auto",
+                        "keyColorAlt": "#FF6B6B",
+                        "keyColorCtrl": "",
+                        "keyColorDefault": "#6C757D",
+                        "keyColorMouse": "#F38181",
+                        "keyColorNumeric": "#A8DADC",
+                        "keyColorPrint": "#95E1D3",
+                        "keyColorShift": "",
+                        "keyColorSuper": "",
+                        "keyColorXF86": "#4ECDC4",
+                        "keyLabelColor": "#FFFFFF",
+                        "keyTextAlt": "",
+                        "keyTextCtrl": "",
+                        "keyTextDefault": "",
+                        "keyTextMouse": "",
+                        "keyTextNumeric": "",
+                        "keyTextPrint": "",
+                        "keyTextShift": "",
+                        "keyTextSuper": "",
+                        "keyTextXF86": "",
+                        "mangoConfigPath": "~/.config/mango/config.conf",
+                        "mergeSequentialBinds": true,
+                        "modKeyVariable": "$mod",
+                        "niriConfigPath": "~/.config/niri/config.kdl",
+                        "showUndescribedBinds": true,
+                        "splitLargeWorkspaceCategory": true,
+                        "windowHeight": 850,
+                        "windowWidth": 1400,
+                        "workspaceSplitThreshold": 12
+                    },
+                    "id": "plugin:keybind-cheatsheet"
                 }
             ]
         }
