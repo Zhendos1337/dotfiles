@@ -113,11 +113,48 @@ layout {
     off
   }
 }
-// VirtualBox
+// 1. Правило для самой запущенной виртуалки
 window-rule {
-    match app-id="[Vv]irtual[Bb]ox"
-    open-floating true
+    // Используем точный App ID и экранируем квадратные скобки в регулярном выражении
+    match app-id="VirtualBox Machine" title=".*\\[Running\\].*"
+    open-fullscreen true
 }
+
+// 2. Исправление черного окна (тулбара)
+window-rule {
+    // Отлавливаем тулбар по его реальным параметрам из лога
+    match app-id="VirtualBoxVM" title="VirtualBoxVM"
+    
+    open-floating true       // Переводим в плавающий режим, чтобы не вставал рядом
+    open-fullscreen false    // Запрещаем открываться на весь экран
+    open-maximized false     // Запрещаем максимизацию
+}
+
+// 3. Отмена фулскрина для диалогов закрытия и главного менеджера
+window-rule {
+    match app-id="VirtualBox Manager"
+    match app-id="VirtualBox Machine" title="Close Virtual Machine"
+    match app-id="VirtualBox Machine" title="Закрытие виртуальной машины"
+    
+    open-fullscreen false
+    open-maximized false
+    geometry-corner-radius 8
+}
+// VirtualBox
+// window-rule {
+//     // Применяем полноэкранный режим только к окнам, где в заголовке есть "Running"
+//     match app-id="[Vv]irtual[Bb]ox" title=".* - Running.*"
+//     open-fullscreen true
+// }
+//
+// window-rule {
+//     // Для всех диалоговых окон VirtualBox отменяем фулскрин и делаем их плавающими
+//     match app-id="[Vv]irtual[Bb]ox" title="Close Virtual Machine"
+//     match app-id="[Vv]irtual[Bb]ox" title="Закрытие виртуальной машины"
+//     open-maximized false
+//     open-fullscreen false
+//     geometry-corner-radius 8
+// }
 
 // plains {
 //   "VirtualBox"
