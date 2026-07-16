@@ -79,7 +79,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git fzf-tab)
+plugins=(git fzf-tab virtualenv)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -118,6 +118,7 @@ alias v='nvim'
 alias cat='bat'
 alias dcd='docker-compose down'
 alias dcu='docker-compose up -d'
+alias open='handlr open'
 # Выбираешь под стрелочками, жмешь Enter — видишь логи
 alias kl='kubectl get pods | fzf --header-lines=1 --preview "kubectl logs {1} --tail=50" | awk "{print \$1}" | xargs -r kubectl logs -f'
 # Amazon Q post block. Keep at the bottom of this file.
@@ -158,7 +159,7 @@ source <(fzf --zsh)
 #kube cluster confing
 export KUBECONFIG=$HOME/.kube/config:$HOME/.kube/work-cluster.yaml:$HOME/.kube/prod-cluster.yaml
 eval "$(zoxide init zsh)"
-
+eval $(thefuck --alias)
 
 ZSH_THEME_GIT_PROMPT_UNTRACKED=" 🆕"  # Вместо ?
 ZSH_THEME_GIT_PROMPT_MODIFIED=" 📝"   # Вместо !
@@ -175,3 +176,10 @@ xcp() {
   tr -d '\n' < "$1" | xsel -ib
 }
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+export PATH="/home/zhendos/.cargo/bin:$PATH"
+
+# The next line updates PATH for CLI.
+if [ -f '/home/zhendos/yandex-cloud/path.bash.inc' ]; then source '/home/zhendos/yandex-cloud/path.bash.inc'; fi
+
+# The next line enables shell command completion for yc.
+if [ -f '/home/zhendos/yandex-cloud/completion.zsh.inc' ]; then source '/home/zhendos/yandex-cloud/completion.zsh.inc'; fi
