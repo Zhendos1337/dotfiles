@@ -80,7 +80,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git fzf-tab virtualenv)
-
+fpath=(~/.config/noctalia/completions "$HOME/.dotfiles/.config/zsh/completions" $fpath)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -168,7 +168,46 @@ ZSH_THEME_GIT_PROMPT_STAGED=" ✅"
 fpath=(~/.oh-my-zsh/completions $fpath)
 autoload -U compinit && compinit
 
+#compdef gitlab-ci-local
+###-begin-gitlab-ci-local-completions-###
+#
+# yargs command completion script
+#
+# Installation: gitlab-ci-local completion >> ~/.zshrc
+#    or gitlab-ci-local completion >> ~/.zprofile on OSX.
+#
+_gitlab-ci-local_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" gitlab-ci-local --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  if [[ ${#reply} -gt 0 ]]; then
+    _describe 'values' reply
+  else
+    _default
+  fi
+}
+if [[ "'${zsh_eval_context[-1]}" == "loadautofunc" ]]; then
+  _gitlab-ci-local_yargs_completions "$@"
+else
+  compdef _gitlab-ci-local_yargs_completions gitlab-ci-local
+fi
+###-end-gitlab-ci-local-completions-###
 
+cx() {
+  env \
+    HTTP_PROXY=socks5h://127.0.0.1:20170 \
+    HTTPS_PROXY=socks5h://127.0.0.1:20170 \
+    ALL_PROXY=socks5h://127.0.0.1:20170 \
+    http_proxy=socks5h://127.0.0.1:20170 \
+    https_proxy=socks5h://127.0.0.1:20170 \
+    all_proxy=socks5h://127.0.0.1:20170 \
+    NO_PROXY=localhost,127.0.0.1,::1 \
+    no_proxy=localhost,127.0.0.1,::1 \
+    codex -c 'cli_auth_credentials_store="file"' "$@"
+}
 export EDITOR=nvim
 
 
@@ -183,3 +222,6 @@ if [ -f '/home/zhendos/yandex-cloud/path.bash.inc' ]; then source '/home/zhendos
 
 # The next line enables shell command completion for yc.
 if [ -f '/home/zhendos/yandex-cloud/completion.zsh.inc' ]; then source '/home/zhendos/yandex-cloud/completion.zsh.inc'; fi
+
+# Created by `pipx` on 2026-10-13 09:20:41
+export PATH="$PATH:/home/zhendos/.local/bin"
