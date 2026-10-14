@@ -1,0 +1,2 @@
+# Keep the Realtek 0bda:a725 Bluetooth adapter awake to avoid USB resets.
+ACTION=="add|change", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="a725", TEST=="power/control", ATTR{power/control}="on"

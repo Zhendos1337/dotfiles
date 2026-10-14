@@ -42,3 +42,19 @@ systemctl --user status librepods.service
 
 See the [plugin documentation](https://github.com/noctalia-dev/community-plugins/tree/main/airpods)
 for requirements and settings.
+
+## Realtek Bluetooth repeatedly turns on and off
+
+On the work machine, the USB adapter `0bda:a725` resets while AirPods are
+disconnected. Disabling USB autosuspend stopped the repeated notifications.
+The repository's udev rule keeps only this adapter awake, including after
+reboot or reconnect. Install it on machines with the same adapter:
+
+```sh
+sudo install -m 0644 "$HOME/.dotfiles/udev/99-realtek-bluetooth-no-autosuspend.rules" /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo udevadm trigger --action=change --subsystem-match=usb --attr-match=idVendor=0bda --attr-match=idProduct=a725
+```
+
+Verify that the adapter's `/sys/bus/usb/devices/<device>/power/control` reads
+`on`. Other USB devices retain their existing power settings.
