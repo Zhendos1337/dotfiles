@@ -208,6 +208,18 @@ cx() {
     no_proxy=localhost,127.0.0.1,::1 \
     codex -c 'cli_auth_credentials_store="file"' "$@"
 }
+cxi() {
+  env \
+    HTTP_PROXY=socks5h://172.20.10.1:10808 \
+    HTTPS_PROXY=socks5h://172.20.10.1:10808 \
+    ALL_PROXY=socks5h://172.20.10.1:10808 \
+    http_proxy=socks5h://172.20.10.1:10808 \
+    https_proxy=socks5h://172.20.10.1:10808 \
+    all_proxy=socks5h://172.20.10.1:10808 \
+    NO_PROXY=localhost,127.0.0.1,::1 \
+    no_proxy=localhost,127.0.0.1,::1 \
+    codex -c 'cli_auth_credentials_store="file"' "$@"
+}
 export EDITOR=nvim
 
 

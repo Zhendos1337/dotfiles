@@ -441,9 +441,12 @@ scale = 1.0
     [plugin_settings."harveywuk/airpods"]
     ctl_path = "/home/zhendos/.local/bin/librepods-ctl"
 
+    [plugin_settings."noctalia/mpvpaper"]
+    video_directory = "/home/zhendos/video/wallpapers"
+
 [plugins]
 auto_update = "all"
-enabled = [ "yocraft/qrcode", "cleboost/ssh-launcher", "harveywuk/airpods" ]
+enabled = [ "yocraft/qrcode", "cleboost/ssh-launcher", "harveywuk/airpods", "noctalia/mpvpaper" ]
 
     [[plugins.source]]
     enabled = true

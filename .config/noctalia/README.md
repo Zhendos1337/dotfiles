@@ -43,6 +43,25 @@ systemctl --user status librepods.service
 See the [plugin documentation](https://github.com/noctalia-dev/community-plugins/tree/main/airpods)
 for requirements and settings.
 
+## Video wallpapers
+
+The config enables `noctalia/mpvpaper` and scans `~/video/wallpapers/`.
+The bundled video is stored in `wallpapers/samurai.mp4` at the repository root.
+On another machine, install `mpvpaper` and `mpv`, then copy the video and open
+the picker to select it for the desired monitors:
+
+```sh
+mkdir -p "$HOME/video/wallpapers"
+cp "$HOME/.dotfiles/wallpapers/samurai.mp4" "$HOME/video/wallpapers/"
+noctalia msg config-reload
+noctalia msg plugins enable noctalia/mpvpaper
+noctalia msg panel-toggle noctalia/mpvpaper:picker
+```
+
+Monitor assignments are saved by the plugin in the local Noctalia state directory.
+If your home directory is not `/home/zhendos`, adjust the configured
+`plugin_settings."noctalia/mpvpaper".video_directory` path.
+
 ## Realtek Bluetooth repeatedly turns on and off
 
 On the work machine, the USB adapter `0bda:a725` resets while AirPods are
