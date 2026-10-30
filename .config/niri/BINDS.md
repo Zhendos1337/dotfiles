@@ -16,7 +16,7 @@
 | **Лаунчер приложений** | Меню запуска программ (Noctalia v5)     | `Mod+D`                        | `Mod+D`                  | `noctalia msg panel-toggle launcher`. |
 | **Меню сессии**        | Открыть меню сессии Noctalia            | -                              | `Mod+X`                  | `noctalia msg panel-toggle session`. |
 | **Центр уведомлений**  | Открыть панель уведомлений (SwayNC)      | -                              | `Mod+N`                  | Добавлено в моем конфиге.     |
-| **Блокировка экрана**  | Блокирует сессию                         | `Super+Alt+L` (swaylock)       | `Super+Alt+L` (hyprlock) | Заменен локер на hyprlock.    |
+| **Блокировка экрана** | Анимированный Тёмный портал (DeckLock) | `Super+Alt+L` (swaylock) | `Super+Alt+L` | Также `Super+X` → Lock; резерв: Lock (Noctalia, backup). |
 | **Скринридер**         | Вкл/выкл Orca                            | `Super+Alt+S`                  | -                        | Убрано за ненадобностью.      |
 | **Справка**            | Показать оверлей с хоткеями              | `Mod+Shift+?`                  | `Mod+Shift+?`            |                               |
 | **Выход**              | Завершить сессию Niri (с подтверждением) | `Mod+Shift+E` / `Ctrl+Alt+Del` | `Mod+Shift+E`            |                               |

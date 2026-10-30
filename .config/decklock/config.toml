@@ -1,0 +1,21 @@
+# All asset paths resolve relative to this file. No system installation required.
+locale = "en-US"
+# Arch's existing auth/account stack; no changes to /etc/pam.d are needed.
+pam_service = "system-auth"
+theme_preset = "classic"
+theme = "themes/burning-crusade"
+background_pool = ["media/burning-crusade.mp4"]
+idle_pool = ["media/burning-crusade.mp4"]
+idle_enabled = false
+system_keyboard = true
+window_decorations = true
+
+[layout]
+alignment = "center"
+arrangement = "vertical"
+spacing = 12
+padding = 32
+clock_visible = false
+idle_clock_visible = false
+avatar_visible = false
+keyboard_scale = 1.0

@@ -1,0 +1,78 @@
+/* GTK4 CSS: keep the Dark Portal visible above a compact login panel. */
+@define-color accent #c6a45c;
+@define-color foreground #f4dfaa;
+@define-color settings_bg #160e09;
+@define-color settings_surface #21170e;
+@define-color settings_raised #50301c;
+@define-color settings_text #f4dfaa;
+@define-color settings_muted #b6a184;
+@define-color keyboard_background #160e09;
+@define-color keyboard_dark #30251a;
+@define-color keyboard_text #f4dfaa;
+@define-color keyboard_hilight #594127;
+@define-color keyboard_pressed #7b592e;
+
+window.decklock, #background { background-color: #080b05; color: @foreground; }
+#veil { background-image: linear-gradient(to bottom, rgba(0,0,0,0.04), rgba(0,0,0,0) 55%, rgba(0,0,0,0.52)); }
+#content { background: transparent; margin-top: 0; }
+#credentials {
+  background-color: rgba(15,10,7,0.28);
+  border: 1px solid rgba(156,120,63,0.25);
+  border-radius: 4px;
+  padding: 10px 14px;
+  box-shadow: none;
+}
+#username {
+  color: rgba(245,213,138,0.55);
+  font-family: "Noto Serif", serif;
+  font-size: 12px;
+  font-weight: normal;
+  text-shadow: 0 2px 3px black;
+  margin-bottom: 0;
+}
+#password {
+  background-color: rgba(9,8,6,0.45);
+  color: #ffebbd;
+  border: 1px solid rgba(128,97,53,0.40);
+  border-radius: 2px;
+  padding: 7px 12px;
+  min-width: 220px;
+  min-height: 20px;
+  font-size: 15px;
+}
+#password:focus-within { border-color: rgba(226,188,101,0.6); outline: none; }
+#password placeholder { color: rgba(173,149,112,0.65); }
+button { background-image: none; box-shadow: none; text-shadow: none; }
+#submit {
+  background-image: linear-gradient(to bottom, rgba(110,30,24,0.65), rgba(65,14,10,0.65));
+  color: #ffe0a0;
+  border: 1px solid rgba(178,139,71,0.4);
+  border-radius: 3px;
+  padding: 7px 12px;
+  min-height: 20px;
+}
+#submit:hover { background-image: linear-gradient(to bottom, #d23e2c, #941d15); border-color: #f0cc77; }
+#submit:disabled { opacity: 0.5; }
+#status, #caps { color: #ffd27a; font-size: 14px; text-shadow: 0 1px 3px black; }
+#status.locked { color: #ff8173; }
+#power button, #help-button {
+  background-color: rgba(24,15,9,0.88);
+  color: #edcd88;
+  border: 1px solid #9c783f;
+  border-radius: 3px;
+  padding: 7px;
+  margin: 4px;
+}
+#power button:hover, #help-button:hover { background-color: #50301c; }
+#help-panel { background-color: #160e09; color: @foreground; border: 1px solid @accent; padding: 20px; }
+#help-close { color: @foreground; background-color: #68120f; }
+#battery { color: @foreground; }
+#keyboard { background: rgba(15,10,7,0.95); }
+#keyboard button.key { background-color: @keyboard_background; color: @keyboard_text; border: 1px solid #806135; border-radius: 2px; }
+#keyboard button.key-dark { background-color: @keyboard_dark; }
+#keyboard button.key:hover, #keyboard button.key-hover, #keyboard button.modifier-active { background-color: @keyboard_hilight; }
+#keyboard button.key:active { background-color: @keyboard_pressed; }
+
+#top-bar { opacity: 0.45; transition: opacity 200ms ease; }
+#top-bar:hover { opacity: 0.9; }
+#credentials, #password, #submit { transition: background-color 200ms ease, border-color 200ms ease; }

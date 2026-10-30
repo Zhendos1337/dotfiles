@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+decklock_home="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+if [[ ! -x "$decklock_home/runtime/usr/bin/decklock" || ! -r "$decklock_home/media/burning-crusade.mp4" ]]; then
+  exec noctalia msg session lock
+fi
+# Prevent two manual lock commands from racing for the Wayland lock.
+exec 9>"${XDG_RUNTIME_DIR:?}/decklock-burning-crusade.lock"
+flock -n 9 || exit 0
+if ! "$decklock_home/bin/decklock" --check-config >/dev/null; then
+  exec noctalia msg session lock
+fi
+exec "$decklock_home/bin/decklock" --lock

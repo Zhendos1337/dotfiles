@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Pinned Arch x86_64 user-local installation; does not write to /usr or /etc.
+set -euo pipefail
+decklock_home="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+download_dir="$(mktemp -d)"
+trap 'rm -rf -- "$download_dir"' EXIT
+
+download() {
+  local url="$1" target="$2"
+  if ! curl -fL --connect-timeout 10 --max-time 120 "$url" -o "$target"; then
+    # Let proxychains provide the proxy, rather than curl's proxy environment.
+    proxychains4 curl --proxy '' -fL --connect-timeout 15 --max-time 180 "$url" -o "$target"
+  fi
+}
+
+verify() {
+  printf '%s  %s\n' "$1" "$2" | sha256sum --check --status
+}
+
+download https://github.com/yan-vidal/DeckLock/releases/download/v0.3.6/decklock-0.3.6-1-x86_64.pkg.tar.zst "$download_dir/decklock.pkg.tar.zst"
+verify 0b0d12748ef0ea7c33883659b554cd2614dd95fc318c44ae12dfdacab6a4311c "$download_dir/decklock.pkg.tar.zst"
+download https://archive.archlinux.org/packages/g/gtk4-layer-shell/gtk4-layer-shell-1.3.0-1-x86_64.pkg.tar.zst "$download_dir/gtk4-layer-shell.pkg.tar.zst"
+verify fdfcc5a8b21f58380a8c108194aa3fcb574c03802605d0b62737f8b1e4e276c4 "$download_dir/gtk4-layer-shell.pkg.tar.zst"
+download https://archive.archlinux.org/packages/g/gst-libav/gst-libav-1.28.8-1-x86_64.pkg.tar.zst "$download_dir/gst-libav.pkg.tar.zst"
+verify 92b440cc9cdbcd89523c6b86af75256cbe4c8fcf5257f86bbff0a38dce31b7b0 "$download_dir/gst-libav.pkg.tar.zst"
+mkdir -p "$decklock_home/runtime" "$decklock_home/media"
+for package in decklock gtk4-layer-shell gst-libav; do
+  tar -xf "$download_dir/$package.pkg.tar.zst" -C "$decklock_home/runtime" usr
+done
+if [[ ! -s "$decklock_home/media/burning-crusade.mp4" ]]; then
+  download https://media.desktophut.com/files/1654792911-1654792911-pc-the-burning-crusade-wow-live-wallpaper-free.mp4 "$download_dir/burning-crusade.mp4"
+  mv -- "$download_dir/burning-crusade.mp4" "$decklock_home/media/burning-crusade.mp4"
+fi
+"$decklock_home/bin/decklock" --check-config
+printf 'Installed. Preview: %s/bin/decklock --preview --preview-fullscreen\n' "$decklock_home"

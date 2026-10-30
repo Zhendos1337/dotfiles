@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+decklock_home="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+exec python3 "$decklock_home/bin/integration.py" disable

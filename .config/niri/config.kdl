@@ -395,7 +395,7 @@ binds {
       spawn-sh "noctalia msg panel-toggle launcher"
   }
   Mod+N hotkey-overlay-title="Notification center" { spawn-sh "swaync-client -t"; }
-  Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
+  Mod+Alt+L hotkey-overlay-title="Lock: Burning Crusade" { spawn "bash" "/home/zhendos/.dotfiles/.config/decklock/bin/lock-screen"; }
 
   // Audio control
   XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ -l 1.0"; }

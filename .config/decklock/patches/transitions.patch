@@ -1,0 +1,245 @@
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -575 +575,14 @@
+-                    lock.unlock();
++                    let lock = lock.clone();
++                    let windows: Vec<_> = result_views
++                        .borrow()
++                        .iter()
++                        .map(|view| view.window.clone())
++                        .collect();
++                    // Only the already-authorized current PAM result reaches this path.
++                    // Keep compositor ownership until every lock surface has faded out.
++                    let authorization = result_session.clone();
++                    ui::transitions::exit(&windows, move || {
++                        if authorization.borrow().is_unlock_authorized() {
++                            lock.unlock();
++                        }
++                    });
+@@ -606 +619,2 @@
+-            view.window.connect_close_request(move |_| {
++            let closing = Cell::new(false);
++            view.window.connect_close_request(move |window| {
+@@ -607,0 +622,6 @@
++                    if ui::transitions::enabled() {
++                        if !closing.replace(true) {
++                            ui::transitions::exit(std::slice::from_ref(window), move || app.quit());
++                        }
++                        return glib::Propagation::Stop;
++                    }
+@@ -615,0 +636 @@
++            let preview_window = view.window.downgrade();
+@@ -618 +638,0 @@
+-                let app = app.downgrade();
+@@ -620,2 +640,2 @@
+-                    if let Some(app) = app.upgrade() {
+-                        app.quit();
++                    if let Some(window) = preview_window.upgrade() {
++                        window.close();
+--- a/src/ui.rs
++++ b/src/ui.rs
+@@ -16,0 +17 @@
++pub mod transitions;
+@@ -945 +946,5 @@
+-    window.set_child(Some(&background_overlay));
++    if transitions::enabled() && !settings.greeter {
++        transitions::attach(&window, &background_overlay);
++    } else {
++        window.set_child(Some(&background_overlay));
++    }
+@@ -1257 +1262,5 @@
+-    form.set_valign(gtk::Align::Center);
++    form.set_valign(if settings.theme.name == "Burning Crusade" {
++        gtk::Align::End
++    } else {
++        gtk::Align::Center
++    });
+--- a/src/session.rs
++++ b/src/session.rs
+@@ -68,0 +69,5 @@
++
++    /// Authorization remains revocable while the visual exit animation runs.
++    pub fn is_unlock_authorized(&self) -> bool {
++        self.state == State::Unlocked
++    }
+@@ -73,0 +79,14 @@
++
++    #[test]
++    fn delayed_visual_exit_cannot_unlock_after_termination() {
++        let mut session = Session::new(false);
++        assert!(!session.is_unlock_authorized());
++        assert!(session.mark_locked());
++        let attempt = session.begin_auth().unwrap();
++        assert!(!session.is_unlock_authorized());
++        assert!(session.complete_auth(attempt, true));
++        assert!(session.is_unlock_authorized());
++        session.terminate();
++        assert!(!session.is_unlock_authorized());
++        assert!(!Session::new(true).is_unlock_authorized());
++    }
+--- /dev/null
++++ b/src/ui/transitions.rs
+@@ -0,0 +1,64 @@
++//! Fade the scene over opaque black, never the Wayland lock surface itself.
++use gtk::{glib, prelude::*};
++use std::time::{Duration, Instant};
++
++pub const DURATION: Duration = Duration::from_millis(550);
++
++pub fn enabled() -> bool {
++    std::env::var("DECKLOCK_TRANSITIONS").as_deref() == Ok("1")
++}
++
++fn animate(scene: &gtk::Widget, from: f64, to: f64) {
++    let started = Instant::now();
++    scene.set_opacity(from);
++    scene.add_tick_callback(move |scene, _| {
++        if to > from && scene.has_css_class("transition-exiting") {
++            return glib::ControlFlow::Break;
++        }
++        let t = (started.elapsed().as_secs_f64() / DURATION.as_secs_f64()).min(1.0);
++        let eased = t * t * (3.0 - 2.0 * t);
++        scene.set_opacity(from + (to - from) * eased);
++        if t >= 1.0 {
++            glib::ControlFlow::Break
++        } else {
++            glib::ControlFlow::Continue
++        }
++    });
++}
++
++pub fn attach(window: &gtk::ApplicationWindow, scene: &gtk::Overlay) {
++    let base = gtk::Overlay::new();
++    base.set_widget_name("transition-base");
++    let black = gtk::DrawingArea::new();
++    black.set_draw_func(|_, context, _, _| {
++        context.set_source_rgb(0.0, 0.0, 0.0);
++        let _ = context.paint();
++    });
++    base.set_child(Some(&black));
++    scene.set_widget_name("transition-scene");
++    scene.set_opacity(0.0);
++    base.add_overlay(scene);
++    window.set_child(Some(&base));
++    scene.connect_map(|scene| animate(scene.upcast_ref(), 0.0, 1.0));
++}
++
++/// The caller alone decides whether exiting is authorized. This never unlocks.
++pub fn exit(windows: &[gtk::ApplicationWindow], finished: impl FnOnce() + 'static) {
++    if !enabled() {
++        finished();
++        return;
++    }
++    for window in windows {
++        if let Some(base) = window
++            .child()
++            .filter(|w| w.widget_name() == "transition-base")
++            && let Some(scene) = base.last_child()
++        {
++            scene.set_sensitive(false);
++            scene.add_css_class("transition-exiting");
++            animate(&scene, scene.opacity(), 0.0);
++        }
++    }
++    // A bounded timer still completes when outputs stop producing frame ticks.
++    glib::timeout_add_local_once(DURATION + Duration::from_millis(50), finished);
++}
+--- /dev/null
++++ b/examples/transitions_check.rs
+@@ -0,0 +1,96 @@
++//! Isolated GTK lifecycle check. No lock backend, PAM, or power actions.
++use decklock::{
++    config::{Config, Theme},
++    i18n::I18n,
++    ui,
++};
++use gtk::{gio, prelude::*};
++use std::{
++    cell::Cell,
++    rc::Rc,
++    time::{Duration, Instant},
++};
++
++fn pump(duration: Duration) {
++    let until = Instant::now() + duration;
++    while Instant::now() < until {
++        for _ in 0..100 {
++            if !gtk::glib::MainContext::default().iteration(false) {
++                break;
++            }
++        }
++        std::thread::sleep(Duration::from_millis(2));
++    }
++}
++
++fn main() {
++    assert!(ui::transitions::enabled());
++    gtk::init().unwrap();
++    let app = gtk::Application::new(
++        Some("io.github.decklock.TransitionsCheck"),
++        gio::ApplicationFlags::NON_UNIQUE,
++    );
++    app.register(None::<&gio::Cancellable>).unwrap();
++    let mut theme = Theme::load(None).unwrap();
++    theme.name = "Burning Crusade".into();
++    theme.layout.clock_visible = false;
++    theme.layout.avatar_visible = false;
++    ui::apply_css(&theme.css).unwrap();
++    let view = ui::build(
++        &app,
++        Rc::new(ui::Settings {
++            config: Config {
++                background_pool: Some(vec![]),
++                idle_enabled: false,
++                system_keyboard: false,
++                ..Config::default()
++            },
++            theme,
++            strings: I18n::new(Some("en-US"), None).unwrap(),
++            preview: true,
++            show_keyboard: false,
++            start_idle: false,
++            username: "Fixture".into(),
++            greeter: false,
++            power_supply: None,
++        }),
++        Rc::new(|_| panic!("Preview must never authenticate")),
++    );
++    let base = view.window.child().unwrap();
++    let scene = base.last_child().unwrap();
++    assert_eq!(base.widget_name(), "transition-base");
++    assert_eq!(scene.opacity(), 0.0);
++    view.window.present();
++    pump(Duration::from_millis(160));
++    assert!(
++        scene.opacity() > 0.0 && scene.opacity() < 1.0,
++        "Entry must have intermediate frames"
++    );
++    assert_eq!(base.opacity(), 1.0, "Opaque base must never fade");
++    assert_eq!(view.window.opacity(), 1.0, "Lock surface must never fade");
++    pump(Duration::from_millis(600));
++    assert_eq!(scene.opacity(), 1.0);
++    let finished = Rc::new(Cell::new(false));
++    let done = finished.clone();
++    ui::transitions::exit(std::slice::from_ref(&view.window), move || done.set(true));
++    pump(Duration::from_millis(160));
++    assert!(
++        scene.opacity() > 0.0 && scene.opacity() < 1.0,
++        "Exit must have intermediate frames"
++    );
++    assert!(!finished.get(), "Completion must wait for the fade");
++    assert!(!scene.is_sensitive(), "No submissions during exit");
++    pump(Duration::from_millis(600));
++    assert_eq!(scene.opacity(), 0.0);
++    assert!(finished.get());
++    assert_eq!(base.opacity(), 1.0);
++    // A hidden output must not leave the authorized completion waiting on ticks.
++    view.window.set_visible(false);
++    let finished = Rc::new(Cell::new(false));
++    let done = finished.clone();
++    ui::transitions::exit(std::slice::from_ref(&view.window), move || done.set(true));
++    pump(Duration::from_millis(700));
++    assert!(finished.get());
++    view.window.destroy();
++    println!("PASS: entry/exit frames, opaque surface, deferred completion, hidden output");
++}

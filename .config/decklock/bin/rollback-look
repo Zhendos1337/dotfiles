@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+decklock_home="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+backup="$decklock_home/backups/before-transitions"
+for file in themes/burning-crusade/style.css bin/decklock; do
+  [[ -f "$backup/$file" ]] || { printf 'Missing backup: %s\n' "$backup/$file" >&2; exit 1; }
+done
+# Preserve the current appearance too, so reverting this change is reversible.
+saved="$decklock_home/backups/look-$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$saved/themes/burning-crusade" "$saved/bin"
+for file in themes/burning-crusade/style.css bin/decklock; do
+  cp -p -- "$decklock_home/$file" "$saved/$file"
+  cp -p -- "$backup/$file" "$decklock_home/$file"
+done
+printf 'Previous appearance and original DeckLock restored. Current version saved in %s\n' "$saved"

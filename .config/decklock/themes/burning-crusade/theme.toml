@@ -1,0 +1,8 @@
+name = "Burning Crusade"
+css = "style.css"
+
+[layout]
+alignment = "center"
+arrangement = "vertical"
+clock_visible = false
+avatar_visible = false

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+decklock_home="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+decklock_runtime="$decklock_home/runtime/usr"
+export LD_LIBRARY_PATH="$decklock_runtime/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export GST_PLUGIN_PATH="$decklock_runtime/lib/gstreamer-1.0${GST_PLUGIN_PATH:+:$GST_PLUGIN_PATH}"
+export XDG_DATA_DIRS="$decklock_runtime/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+# This machine crashes in gstglcontext while closing the GL video sink.
+# Keep GTK's Vulkan renderer, but use the video sink's CPU fallback.
+export GDK_DISABLE="gl${GDK_DISABLE:+,$GDK_DISABLE}"
+decklock_binary="$decklock_runtime/bin/decklock"
+if [[ -x "$decklock_runtime/bin/decklock-animated" ]]; then
+  decklock_binary="$decklock_runtime/bin/decklock-animated"
+  export DECKLOCK_TRANSITIONS=1
+fi
+exec "$decklock_binary" --config "$decklock_home/config.toml" "$@"

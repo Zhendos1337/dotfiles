@@ -1,0 +1,8 @@
+/runtime/
+/media/*.mp4
+/state/
+/backups/
+/preview*.png
+/preview*.webm
+/state-preview.log
+__pycache__/

@@ -575,13 +575,23 @@ time_format = "{:%H:%M}"
         [shell.session.power]
 
         [[shell.session.actions]]
+        action = "command"
+        command = "bash /home/zhendos/.dotfiles/.config/decklock/bin/lock-screen"
+        countdown_seconds = 0.0
+        enabled = true
+        glyph = "lock"
+        label = "Lock"
+        shortcut = "1"
+        variant = "default"
+
+        [[shell.session.actions]]
         action = "lock"
         command = ""
         countdown_seconds = 0.0
         enabled = true
         glyph = ""
-        label = ""
-        shortcut = "1"
+        label = "Lock (Noctalia, backup)"
+        shortcut = "6"
         variant = "default"
 
         [[shell.session.actions]]
