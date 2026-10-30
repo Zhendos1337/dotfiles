@@ -5,7 +5,7 @@ return {
     priority = 1000,
     opts = {
       style = "moon",       -- Глубокий, плотный темный фон
-      transparent = false,   -- ОТКЛЮЧАЕМ прозрачность внутри Neovim (1.1.1, 1.1.6)
+      transparent = true,   -- ОТКЛЮЧАЕМ прозрачность внутри Neovim (1.1.1, 1.1.6)
       dim_inactive = false,  -- Запрещаем затухание окон
       styles = {
         sidebars = "dark",
