@@ -1,0 +1,53 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -16 +16 @@
+-gtk = { package = "gtk4", version = "0.11", features = ["v4_12"] }
++gtk = { package = "gtk4", version = "0.11", features = ["v4_18"] }
+--- a/src/ui.rs
++++ b/src/ui.rs
+@@ -18,0 +19,38 @@
++fn update_keyboard_layout(keyboard: &gdk::Device, label: &gtk::Label) {
++    let names = keyboard.layout_names();
++    let name = usize::try_from(keyboard.active_layout_index())
++        .ok()
++        .and_then(|index| names.get(index))
++        .map_or("", |name| name.as_str());
++    label.set_text(match name {
++        "English (US)" => "EN",
++        "Russian" => "RU",
++        name => name,
++    });
++    label.set_tooltip_text(Some(name).filter(|name| !name.is_empty()));
++}
++
++fn keyboard_layout_indicator(display: &gdk::Display) -> gtk::Label {
++    let label = gtk::Label::new(None);
++    label.set_widget_name("keyboard-layout");
++    label.set_ellipsize(gtk::pango::EllipsizeMode::End);
++    label.set_max_width_chars(10);
++    if let Some(keyboard) = display.default_seat().and_then(|seat| seat.keyboard()) {
++        update_keyboard_layout(&keyboard, &label);
++        for signal in ["notify::active-layout-index", "notify::layout-names"] {
++            keyboard.connect_closure(
++                signal,
++                false,
++                glib::closure_local!(
++                    #[watch]
++                    label,
++                    move |keyboard: gdk::Device, _: glib::ParamSpec| {
++                        update_keyboard_layout(&keyboard, &label);
++                    }
++                ),
++            );
++        }
++    }
++    label
++}
++
+@@ -1705 +1743,5 @@
+-    let spacer = gtk::Box::new(gtk::Orientation::Horizontal, 0);
++    let spacer: gtk::Widget = if !settings.greeter && settings.theme.name == "Burning Crusade" {
++        keyboard_layout_indicator(&gtk::prelude::WidgetExt::display(&window)).upcast()
++    } else {
++        gtk::Box::new(gtk::Orientation::Horizontal, 0).upcast()
++    };

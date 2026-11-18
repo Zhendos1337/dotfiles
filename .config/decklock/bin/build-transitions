@@ -13,6 +13,7 @@ printf '%s  %s\n' ae6737c5f1800961fe8528ecdca795e3efecb0a589003274ded9635256a3e9
 tar -xf "$archive" -C "$build_dir" --strip-components=1
 cd "$build_dir"
 patch -p1 < "$decklock_home/patches/transitions.patch"
+patch -p1 < "$decklock_home/patches/keyboard-layout.patch"
 mkdir -p native-pkgconfig
 sed "s|^prefix=/usr$|prefix=$runtime|" "$runtime/lib/pkgconfig/gtk4-layer-shell-0.pc" > native-pkgconfig/gtk4-layer-shell-0.pc
 export PKG_CONFIG_PATH="$build_dir/native-pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"

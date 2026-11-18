@@ -4,6 +4,8 @@ DeckLock 0.3.6 with a looping, muted 1920×1080 Dark Portal video (58 seconds),
 a small translucent password panel near the bottom and a muted red submit button.
 The local variant fades the scene in/out over opaque black in 550 ms. The video and binaries
 are local assets excluded from Git. No system packages or PAM files are changed.
+The local variant shows `EN` or `RU` next to the password field and updates the
+indicator when the keyboard layout changes with `Alt+Shift`.
 
 Manual locking through `Super+X` → **Lock** and `Super+Alt+L` starts DeckLock.
 The menu keeps **Lock (Noctalia, backup)** (shortcut `6`). Noctalia continues to
@@ -56,8 +58,8 @@ Failed downloads are retried using `proxychains4`. GTK and the other base runtim
 libraries come from the installed system. The integration paths point to this
 checkout, `/home/zhendos/.dotfiles`; re-run integration setup if relocating it.
 
-`build-transitions` builds a pinned source archive with `patches/transitions.patch`.
-It needs Rust/Cargo, GTK4/GStreamer development files, pkg-config, patch, Xvfb,
+`build-transitions` builds a pinned source archive with the patches in `patches/`.
+It needs Rust/Cargo, GTK 4.18 or later and GStreamer development files, pkg-config, patch, Xvfb,
 xauth and dbus-run-session. It runs library/session tests and an isolated GTK
 transition test before installing `runtime/usr/bin/decklock-animated`. The original
 release binary remains alongside it. The wrapper selects the variant when present.

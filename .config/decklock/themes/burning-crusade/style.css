@@ -42,6 +42,7 @@ window.decklock, #background { background-color: #080b05; color: @foreground; }
 }
 #password:focus-within { border-color: rgba(226,188,101,0.6); outline: none; }
 #password placeholder { color: rgba(173,149,112,0.65); }
+#keyboard-layout { color: #ffd27a; font-size: 12px; font-weight: bold; }
 button { background-image: none; box-shadow: none; text-shadow: none; }
 #submit {
   background-image: linear-gradient(to bottom, rgba(110,30,24,0.65), rgba(65,14,10,0.65));
